@@ -68,6 +68,14 @@ func main() {
 			}
 			res.WriteHeader(localRes.StatusCode)
 			res.Write(body)
+
+			if localRes.StatusCode == 401 {
+				lsa, err := amtCommand.GetLocalSystemAccount()
+				if err != nil {
+					log.Fatalf("GetLocalSystemAccount: %v", err)
+				}
+				session.SetAuth(lsa.Username, lsa.Password)
+			}
 		}
 	}
 	server.Handler = handleFunc
